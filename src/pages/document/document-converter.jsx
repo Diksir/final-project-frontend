@@ -41,13 +41,13 @@ export default function SamplePage() {
       setConversionStatus('Converting...');
       let response;
       if (files[0].type === 'application/pdf') {
-        response = await axios.post('http://127.0.0.1:8000/api/convert/pdf-to-doc/', formData, {
+        response = await axios.post(`${BASE_URL}/convert/pdf-to-doc/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
       } else {
-        response = await axios.post('http://127.0.0.1:8000/api/convert/doc-to-pdf/', formData, {
+        response = await axios.post(`${BASE_URL}/convert/doc-to-pdf/`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
