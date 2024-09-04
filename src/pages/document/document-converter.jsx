@@ -6,6 +6,7 @@ import MainCard from 'components/MainCard';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
+import { BASE_URL } from 'api/config';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
