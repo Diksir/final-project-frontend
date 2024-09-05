@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Stack, Typography, Button, Modal, Box, Paper, IconButton, InputBase, Divider, CircularProgress } from '@mui/material';
 import { toast } from 'react-toastify';
 import { BookOutlined, FileTextOutlined, SendOutlined } from '@ant-design/icons';
@@ -25,6 +25,15 @@ export const QProcess = ({ user, session }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
+  const scrollableContainerRef = useRef(null);
+
+  // Step 3: Function to scroll to the bottom
+  const scrollToBottom = () => {
+    if (scrollableContainerRef.current) {
+      scrollableContainerRef.current.scrollTop = scrollableContainerRef.current.scrollHeight;
+    }
+  };
+
   const handleViewQuestionPaper = () => {
     if (session?.question_paper?.document) {
       window.open(session.question_paper.document, '_blank');
@@ -50,6 +59,7 @@ export const QProcess = ({ user, session }) => {
     const request = await sendMessage(payload);
     if (request.ok) {
       setMessages(request.data);
+      scrollToBottom();
       setLoading(false);
       return;
     }
@@ -58,6 +68,8 @@ export const QProcess = ({ user, session }) => {
     const error = request.data?.detail || request.data?.message || 'Unable to complete the request please try again';
     toast.error(error);
   };
+
+  console.log(messages);
 
   return (
     <>
@@ -70,8 +82,20 @@ export const QProcess = ({ user, session }) => {
             Course Detail
           </Button>
         </Stack>
-        <Stack sx={{ flex: 1 }}>
-          <Stack sx={{ flex: 1 }}></Stack>
+        <Stack sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <Stack ref={scrollableContainerRef} sx={{ flex: 1, overflowY: 'auto', flexBasis: 1, padding: 2 }}>
+            {messages.map((message) => (
+              <Stack key={message.id} spacing={1} my={1}>
+                <Stack sx={{ bgcolor: 'ActiveCaption', padding: 1, color: 'white' }}>
+                  <Typography sx={{ whiteSpace: 'pre-line' }}>{message?.content}</Typography>
+                </Stack>
+                <Stack sx={{ bgcolor: 'white', color: 'black', padding: 1 }}>
+                  <Typography sx={{ whiteSpace: 'pre-line' }}>{`${message?.ai_response}`}</Typography>
+                </Stack>
+              </Stack>
+            ))}
+          </Stack>
+
           <Stack spacing={1}>
             <Stack direction={'row'} spacing={1}>
               {preDefinePrompt.map((prompt) => (

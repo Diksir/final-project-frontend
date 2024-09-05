@@ -3,6 +3,8 @@ import { store } from 'store';
 import { userLogOut } from 'store/actions/app.actions';
 
 export const BASE_URL = 'http://3.249.27.46/api';
+// export const BASE_URL = 'http://127.0.0.1:8000/api';
+
 
 const monitorBadToken = (response) => {
   if (response.status === 401) {
